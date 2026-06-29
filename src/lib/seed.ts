@@ -202,10 +202,13 @@ const seedContents: GameContent[] = [
   content("g02", 1, { keyword: "코끼리", answer: "코끼리", count: 4, timeLimit: 5 }),
   content("g02", 2, { keyword: "회식", answer: "회식", count: 4, timeLimit: 5 }),
   content("g02", 3, { keyword: "비행기", answer: "비행기", count: 4, timeLimit: 5 }),
-  // 줄줄이 말해요 (주제 + 초성)
-  content("g03", 1, { keyword: "음식 이름", initialSound: "ㄱ", hint: "김밥, 감자탕", timeLimit: 3 }),
-  content("g03", 2, { keyword: "동물", initialSound: "ㅅ", hint: "사자, 사슴", timeLimit: 3 }),
-  content("g03", 3, { keyword: "회사 용어", initialSound: "ㅂ", hint: "보고서, 부장님", timeLimit: 3 }),
+  // 줄줄이 말해요 (1 콘텐츠 = 1 주제, 초성은 자동 11개 생성). 주제 6개.
+  content("g03", 1, { keyword: "음식 이름", hint: "김밥, 감자탕", timeLimit: 3 }),
+  content("g03", 2, { keyword: "동물", hint: "사자, 사슴", timeLimit: 3 }),
+  content("g03", 3, { keyword: "회사 용어", hint: "보고서, 부장님", timeLimit: 3 }),
+  content("g03", 4, { keyword: "영화 제목", hint: "기생충, 명량", timeLimit: 3 }),
+  content("g03", 5, { keyword: "과일", hint: "감, 사과", timeLimit: 3 }),
+  content("g03", 6, { keyword: "나라 이름", hint: "그리스, 스페인", timeLimit: 3 }),
   // 흑백요리사 (과자명 정답)
   content("g04", 1, { answer: "새우깡", hint: "바삭한 국민 스낵" }),
   content("g04", 2, { answer: "초코파이", hint: "정(情)" }),

@@ -90,14 +90,12 @@ export function ContentFields({
     case "chain":
       return (
         <>
-          <div className="grid grid-cols-2 gap-3">
-            <Field label="주제 *">
-              <input name="keyword" defaultValue={content.keyword} className="admin-input" placeholder="예: 음식 이름" />
-            </Field>
-            <Field label="초성 *">
-              <input name="initialSound" defaultValue={content.initialSound} className="admin-input" placeholder="예: ㄱ" />
-            </Field>
-          </div>
+          <Field label="주제 * (1개 콘텐츠 = 1개 주제, 선택 화면에 표시)">
+            <input name="keyword" defaultValue={content.keyword} className="admin-input" placeholder="예: 음식 이름" />
+          </Field>
+          <Field label="초성 직접 지정 (선택 · 한 줄에 하나씩, 비워두면 자동 11개)">
+            <textarea name="options" defaultValue={content.options} rows={4} className="admin-input" placeholder={"비워두면 ㄱ,ㄴ,ㄷ... 중 무작위 11개 생성\n직접 지정 시 예)\nㄱ\nㅅ\nㅂ"} />
+          </Field>
           <Field label="예시 정답 (진행자 참고)">
             <input name="hint" defaultValue={content.hint} className="admin-input" placeholder="예: 김밥, 감자탕" />
           </Field>
