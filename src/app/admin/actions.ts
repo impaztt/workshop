@@ -300,6 +300,20 @@ export async function addMissionAction(fd: FormData) {
   revalidatePath("/admin/missions");
 }
 
+export async function updateMissionAction(fd: FormData) {
+  await requireAuth();
+  const missionId = str(fd, "missionId");
+  await mutateDB((db) => {
+    const m = db.missions.find((x) => x.missionId === missionId);
+    if (!m) return;
+    m.participantName = str(fd, "participantName") || m.participantName;
+    m.missionText = str(fd, "missionText");
+    m.isPublic = bool(fd, "isPublic");
+  });
+  revalidatePath("/admin/missions");
+  revalidatePath("/");
+}
+
 export async function deleteMissionAction(fd: FormData) {
   await requireAuth();
   const missionId = str(fd, "missionId");
