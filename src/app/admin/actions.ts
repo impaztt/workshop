@@ -309,6 +309,52 @@ export async function deleteMissionAction(fd: FormData) {
   revalidatePath("/admin/missions");
 }
 
+/* ───────── 오늘의 상품 ───────── */
+
+export async function addProductAction(fd: FormData) {
+  await requireAuth();
+  const image = await saveUpload(fd.get("image"), "image");
+  await mutateDB((db) => {
+    const maxOrder = db.products.reduce((m, p) => Math.max(m, p.sortOrder), 0);
+    db.products.push({
+      productId: uid("pr"),
+      name: str(fd, "name") || "상품",
+      imageUrl: image || "",
+      sortOrder: maxOrder + 1,
+    });
+  });
+  revalidatePath("/admin/products");
+  revalidatePath("/");
+}
+
+export async function deleteProductAction(fd: FormData) {
+  await requireAuth();
+  const productId = str(fd, "productId");
+  await mutateDB((db) => {
+    db.products = db.products.filter((p) => p.productId !== productId);
+  });
+  revalidatePath("/admin/products");
+  revalidatePath("/");
+}
+
+export async function moveProductAction(fd: FormData) {
+  await requireAuth();
+  const productId = str(fd, "productId");
+  const dir = str(fd, "dir");
+  await mutateDB((db) => {
+    const sorted = [...db.products].sort((a, b) => a.sortOrder - b.sortOrder);
+    const idx = sorted.findIndex((p) => p.productId === productId);
+    if (idx < 0) return;
+    const swapWith = dir === "up" ? idx - 1 : idx + 1;
+    if (swapWith < 0 || swapWith >= sorted.length) return;
+    const tmp = sorted[idx].sortOrder;
+    sorted[idx].sortOrder = sorted[swapWith].sortOrder;
+    sorted[swapWith].sortOrder = tmp;
+  });
+  revalidatePath("/admin/products");
+  revalidatePath("/");
+}
+
 /* ───────── 초기화 ───────── */
 
 export async function resetAllAction() {

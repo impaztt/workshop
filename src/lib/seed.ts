@@ -284,6 +284,13 @@ export function createSeedDB(): DB {
       { id: "p3", name: "박민수" },
       { id: "p4", name: "정수진" },
     ],
+    // 오늘의 상품(경품) 샘플 — 메인 우측 패널 노출 (이미지는 관리자페이지에서 등록)
+    products: [
+      { productId: "pr1", name: "블루투스 스피커", imageUrl: "", sortOrder: 1 },
+      { productId: "pr2", name: "스타벅스 기프티콘", imageUrl: "", sortOrder: 2 },
+      { productId: "pr3", name: "무선 충전기", imageUrl: "", sortOrder: 3 },
+      { productId: "pr4", name: "치킨 기프티콘", imageUrl: "", sortOrder: 4 },
+    ],
     // 기상미션 샘플
     missions: [
       { missionId: "m1", participantName: "김철수", missionText: "아침에 제일 먼저 단체 채팅방에 인사하기", isPublic: true, isCompleted: false, sortOrder: 1 },

@@ -1,12 +1,15 @@
 import Link from "next/link";
 import { getActiveGames, getMeta, isGamePlayable, getContentCount } from "@/lib/data";
+import { readDB } from "@/lib/db";
 import { GameGrid } from "@/components/GameGrid";
+import { ProductPanel } from "@/components/ProductPanel";
 import type { GameCardData } from "@/components/GameGrid";
 
 export const dynamic = "force-dynamic";
 
 export default async function MainPage() {
-  const [meta, games] = await Promise.all([getMeta(), getActiveGames()]);
+  const [meta, games, db] = await Promise.all([getMeta(), getActiveGames(), readDB()]);
+  const products = [...db.products].sort((a, b) => a.sortOrder - b.sortOrder);
 
   const cards: GameCardData[] = await Promise.all(
     games.map(async (g, idx) => ({
@@ -56,8 +59,13 @@ export default async function MainPage() {
           </p>
         </div>
 
-        {/* 4×3 카드 그리드 */}
-        <GameGrid cards={cards} />
+        {/* 카드 그리드 + 오늘의 상품 패널 */}
+        <div className="flex flex-1 flex-col gap-6 lg:flex-row">
+          <div className="flex-1">
+            <GameGrid cards={cards} />
+          </div>
+          <ProductPanel products={products} />
+        </div>
 
         {/* 하단 안내 */}
         <footer className="mt-10 text-center text-sm text-white/35">

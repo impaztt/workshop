@@ -53,6 +53,7 @@ function normalize(db: Partial<DB>): DB {
     gifts: db.gifts ?? [],
     giftParticipants: db.giftParticipants ?? [],
     missions: db.missions ?? [],
+    products: db.products ?? [],
   };
 }
 
@@ -97,6 +98,8 @@ export async function resetDB(): Promise<DB> {
     db.contents = seed.contents;
     db.gifts = seed.gifts;
     db.giftParticipants = seed.giftParticipants;
+    db.missions = seed.missions;
+    db.products = seed.products;
     return db;
   });
 }

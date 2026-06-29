@@ -82,6 +82,14 @@ export interface GiftParticipant {
   name: string;
 }
 
+// 메인 화면 우측 '오늘의 상품' 패널에 노출되는 경품
+export interface Product {
+  productId: string;
+  name: string;
+  imageUrl: string;
+  sortOrder: number;
+}
+
 // 기상미션 전용 데이터
 export interface Mission {
   missionId: string;
@@ -103,4 +111,5 @@ export interface DB {
   gifts: Gift[];
   giftParticipants: GiftParticipant[];
   missions: Mission[];
+  products: Product[];
 }
