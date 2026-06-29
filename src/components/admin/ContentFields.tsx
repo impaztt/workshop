@@ -62,29 +62,150 @@ export function ContentFields({
         </>
       );
 
-    default:
-      // 2차 개발 게임 — 범용 필드 (사전 입력용)
+    case "draw":
       return (
         <>
           <div className="grid grid-cols-2 gap-3">
-            <Field label="문제 / 제시어">
-              <input name="question" defaultValue={content.question} className="admin-input" />
-            </Field>
-            <Field label="키워드 / 초성">
-              <input name="keyword" defaultValue={content.keyword} className="admin-input" />
-            </Field>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <Field label="정답">
-              <input name="answer" defaultValue={content.answer} className="admin-input" />
+            <Field label="제시어 *">
+              <input name="keyword" defaultValue={content.keyword} className="admin-input" placeholder="예: 코끼리" />
             </Field>
             <Field label="힌트">
               <input name="hint" defaultValue={content.hint} className="admin-input" />
             </Field>
           </div>
+          <div className="flex items-end gap-5">
+            <div className="w-40">
+              <label className="admin-label">참가 인원 (0=기본 4명)</label>
+              <input name="count" type="number" min={0} defaultValue={content.count} className="admin-input" />
+            </div>
+            <div className="w-48">
+              <label className="admin-label">1인 제한시간 (초)</label>
+              <input name="timeLimit" type="number" min={0} defaultValue={content.timeLimit} className="admin-input" />
+            </div>
+            <ActiveCheckbox content={content} />
+          </div>
+        </>
+      );
+
+    case "chain":
+      return (
+        <>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="주제 *">
+              <input name="keyword" defaultValue={content.keyword} className="admin-input" placeholder="예: 음식 이름" />
+            </Field>
+            <Field label="초성 *">
+              <input name="initialSound" defaultValue={content.initialSound} className="admin-input" placeholder="예: ㄱ" />
+            </Field>
+          </div>
+          <Field label="예시 정답 (진행자 참고)">
+            <input name="hint" defaultValue={content.hint} className="admin-input" placeholder="예: 김밥, 감자탕" />
+          </Field>
           <TimeAndActive content={content} />
         </>
       );
+
+    case "taste":
+      return (
+        <>
+          <ImageUpload content={content} />
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="과자명 (정답) *">
+              <input name="answer" defaultValue={content.answer} className="admin-input" placeholder="예: 새우깡" />
+            </Field>
+            <Field label="힌트">
+              <input name="hint" defaultValue={content.hint} className="admin-input" />
+            </Field>
+          </div>
+          <ActiveOnly content={content} />
+        </>
+      );
+
+    case "together":
+      return (
+        <>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="정답 단어 *">
+              <input name="answer" defaultValue={content.answer} className="admin-input" placeholder="예: 워크샵 (글자 수 자동 계산)" />
+            </Field>
+            <Field label="힌트">
+              <input name="hint" defaultValue={content.hint} className="admin-input" />
+            </Field>
+          </div>
+          <ActiveOnly content={content} />
+        </>
+      );
+
+    case "hide":
+      return (
+        <>
+          <Field label="라운드 이름 *">
+            <input name="question" defaultValue={content.question} className="admin-input" placeholder="예: A팀이 숨고 B팀이 찾기" />
+          </Field>
+          <Field label="안내 / 안전 문구">
+            <input name="hint" defaultValue={content.hint} className="admin-input" placeholder="예: 계단·화장실엔 숨지 마세요" />
+          </Field>
+          <div className="flex items-end gap-5">
+            <div className="w-48">
+              <label className="admin-label">제한시간 (초, 기본 120)</label>
+              <input name="timeLimit" type="number" min={0} defaultValue={content.timeLimit} className="admin-input" />
+            </div>
+            <ActiveCheckbox content={content} />
+          </div>
+        </>
+      );
+
+    case "goldenbell":
+      return (
+        <>
+          <Field label="문제 *">
+            <textarea name="question" defaultValue={content.question} rows={2} className="admin-input" />
+          </Field>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="문제 유형">
+              <select name="questionType" defaultValue={content.questionType || "주관식"} className="admin-input">
+                <option value="주관식">주관식</option>
+                <option value="객관식">객관식</option>
+                <option value="ox">OX</option>
+              </select>
+            </Field>
+            <Field label="정답 *">
+              <input name="answer" defaultValue={content.answer} className="admin-input" placeholder="객관식은 보기 중 하나 / OX는 O 또는 X" />
+            </Field>
+          </div>
+          <Field label="객관식 보기 (한 줄에 하나씩)">
+            <textarea name="options" defaultValue={content.options} rows={4} className="admin-input" placeholder={"고래\n박쥐\n상어\n사람"} />
+          </Field>
+          <Field label="해설 (선택)">
+            <input name="hint" defaultValue={content.hint} className="admin-input" />
+          </Field>
+          <TimeAndActive content={content} />
+        </>
+      );
+
+    case "truth":
+      return (
+        <>
+          <Field label="문장 *">
+            <textarea name="question" defaultValue={content.question} rows={2} className="admin-input" placeholder="예: 오늘 참석자 중 생일자가 있다." />
+          </Field>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="정답 *">
+              <select name="answer" defaultValue={content.answer || "진실"} className="admin-input">
+                <option value="진실">진실</option>
+                <option value="거짓">거짓</option>
+              </select>
+            </Field>
+            <Field label="해설 (선택)">
+              <input name="hint" defaultValue={content.hint} className="admin-input" />
+            </Field>
+          </div>
+          <ActiveOnly content={content} />
+        </>
+      );
+
+    default:
+      return <ActiveOnly content={content} />;
   }
 }
 

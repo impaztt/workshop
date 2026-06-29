@@ -39,6 +39,9 @@ export async function isGamePlayable(game: Game): Promise<boolean> {
   if (game.gameType === "gift") {
     return db.gifts.length > 0 && db.giftParticipants.length > 0;
   }
+  if (game.gameType === "mission") {
+    return db.missions.length > 0;
+  }
   return db.contents.some((c) => c.gameId === game.gameId && c.isActive);
 }
 

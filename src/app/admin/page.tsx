@@ -72,7 +72,9 @@ export default async function DashboardPage() {
                   <td className="px-4 py-3 text-center tabular-nums">
                     {g.gameType === "gift"
                       ? `${db.gifts.length}선물/${db.giftParticipants.length}명`
-                      : `${contentCount(g.gameId)}개`}
+                      : g.gameType === "mission"
+                        ? `미션 ${db.missions.length}개`
+                        : `${contentCount(g.gameId)}개`}
                   </td>
                   <td className="px-4 py-3 text-center">
                     {g.isActive ? (

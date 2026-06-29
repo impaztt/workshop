@@ -172,9 +172,13 @@ export async function createContentAction(fd: FormData) {
       optionO: "",
       optionX: "",
       keyword: "",
+      initialSound: "",
       answer: "",
       artist: "",
       hint: "",
+      options: "",
+      questionType: "주관식",
+      count: 0,
       imageUrl: "",
       audioUrl: "",
       timeLimit: 0,
@@ -198,9 +202,13 @@ export async function updateContentAction(fd: FormData) {
     c.optionO = str(fd, "optionO");
     c.optionX = str(fd, "optionX");
     c.keyword = str(fd, "keyword");
+    c.initialSound = str(fd, "initialSound");
     c.answer = str(fd, "answer");
     c.artist = str(fd, "artist");
     c.hint = str(fd, "hint");
+    c.options = str(fd, "options");
+    c.questionType = str(fd, "questionType") || "주관식";
+    c.count = num(fd, "count");
     c.timeLimit = num(fd, "timeLimit");
     c.isActive = bool(fd, "isActive");
     if (image) c.imageUrl = image;
@@ -272,6 +280,33 @@ export async function deleteParticipantAction(fd: FormData) {
     db.giftParticipants = db.giftParticipants.filter((p) => p.id !== id);
   });
   revalidatePath("/admin/gifts");
+}
+
+/* ───────── 기상미션 ───────── */
+
+export async function addMissionAction(fd: FormData) {
+  await requireAuth();
+  await mutateDB((db) => {
+    const maxOrder = db.missions.reduce((m, x) => Math.max(m, x.sortOrder), 0);
+    db.missions.push({
+      missionId: uid("m"),
+      participantName: str(fd, "participantName") || "참가자",
+      missionText: str(fd, "missionText"),
+      isPublic: bool(fd, "isPublic"),
+      isCompleted: false,
+      sortOrder: maxOrder + 1,
+    });
+  });
+  revalidatePath("/admin/missions");
+}
+
+export async function deleteMissionAction(fd: FormData) {
+  await requireAuth();
+  const missionId = str(fd, "missionId");
+  await mutateDB((db) => {
+    db.missions = db.missions.filter((m) => m.missionId !== missionId);
+  });
+  revalidatePath("/admin/missions");
 }
 
 /* ───────── 초기화 ───────── */

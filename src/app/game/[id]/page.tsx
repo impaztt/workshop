@@ -80,7 +80,7 @@ export default async function GameDescriptionPage({
               </div>
 
               <div className="mt-5 flex flex-wrap gap-3 text-sm text-white/60">
-                {game.gameType !== "gift" && (
+                {game.gameType !== "gift" && game.gameType !== "mission" && (
                   <span className="rounded-lg bg-white/5 px-3 py-2">
                     등록 콘텐츠 <b className="text-white">{count}</b>개
                   </span>

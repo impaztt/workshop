@@ -164,9 +164,13 @@ function content(
     optionO: "",
     optionX: "",
     keyword: "",
+    initialSound: "",
     answer: "",
     artist: "",
     hint: "",
+    options: "",
+    questionType: "주관식",
+    count: 0,
     imageUrl: "",
     audioUrl: "",
     timeLimit: 0,
@@ -194,12 +198,60 @@ const seedContents: GameContent[] = [
     optionO: "재택 평생",
     optionX: "사무실 평생",
   }),
+  // 이어그리기 (제시어)
+  content("g02", 1, { keyword: "코끼리", answer: "코끼리", count: 4, timeLimit: 5 }),
+  content("g02", 2, { keyword: "회식", answer: "회식", count: 4, timeLimit: 5 }),
+  content("g02", 3, { keyword: "비행기", answer: "비행기", count: 4, timeLimit: 5 }),
+  // 줄줄이 말해요 (주제 + 초성)
+  content("g03", 1, { keyword: "음식 이름", initialSound: "ㄱ", hint: "김밥, 감자탕", timeLimit: 3 }),
+  content("g03", 2, { keyword: "동물", initialSound: "ㅅ", hint: "사자, 사슴", timeLimit: 3 }),
+  content("g03", 3, { keyword: "회사 용어", initialSound: "ㅂ", hint: "보고서, 부장님", timeLimit: 3 }),
+  // 흑백요리사 (과자명 정답)
+  content("g04", 1, { answer: "새우깡", hint: "바삭한 국민 스낵" }),
+  content("g04", 2, { answer: "초코파이", hint: "정(情)" }),
+  content("g04", 3, { answer: "홈런볼", hint: "동그란 크림" }),
   // 이미지퀴즈 (이미지는 관리자페이지에서 업로드)
   content("g05", 1, { answer: "구글", hint: "검색 엔진" }),
   content("g05", 2, { answer: "애플", hint: "한 입 베어 문 과일" }),
   content("g05", 3, { answer: "스타벅스", hint: "초록색 세이렌" }),
+  // 같이 말해 (정답 단어)
+  content("g06", 1, { answer: "워크샵", hint: "지금 우리가 하는 것" }),
+  content("g06", 2, { answer: "삼겹살", hint: "회식 단골 메뉴" }),
+  content("g06", 3, { answer: "프로젝트", hint: "업무 단위" }),
+  // 숨바꼭질 (라운드, 2분)
+  content("g07", 1, { question: "A팀이 숨고 B팀이 찾기", hint: "꼭꼭 숨어라!", timeLimit: 120 }),
+  content("g07", 2, { question: "B팀이 숨고 A팀이 찾기", hint: "꼭꼭 숨어라!", timeLimit: 120 }),
   // 음악퀴즈 (음악 파일은 관리자페이지에서 업로드)
   content("g08", 1, { answer: "곡명 미등록", artist: "", hint: "행사 전 음원을 등록하세요" }),
+  // 도전골든벨 (퀴즈)
+  content("g09", 1, {
+    question: "대한민국의 수도는?",
+    questionType: "주관식",
+    answer: "서울",
+  }),
+  content("g09", 2, {
+    question: "다음 중 포유류가 아닌 것은?",
+    questionType: "객관식",
+    options: "고래\n박쥐\n상어\n사람",
+    answer: "상어",
+    hint: "아가미로 숨 쉬는 동물",
+  }),
+  content("g09", 3, {
+    question: "지구에서 가장 큰 대양은 태평양이다.",
+    questionType: "ox",
+    answer: "O",
+  }),
+  // 진실게임 (진실/거짓)
+  content("g10", 1, {
+    question: "오늘 참석자 중 생일자가 있다.",
+    answer: "진실",
+    hint: "진행자가 사전에 확인하세요",
+  }),
+  content("g10", 2, {
+    question: "우리 회사는 올해 창립 10주년이다.",
+    answer: "거짓",
+    hint: "행사에 맞게 수정하세요",
+  }),
 ];
 
 export function createSeedDB(): DB {
@@ -220,8 +272,25 @@ export function createSeedDB(): DB {
     },
     games,
     contents: seedContents,
-    gifts: [],
-    giftParticipants: [],
+    // 선물증정 샘플 (행사 전 교체)
+    gifts: [
+      { giftId: "gift1", giftName: "블루투스 스피커", giftImageUrl: "", providerName: "", receiverName: "", isAssigned: false, sortOrder: 1 },
+      { giftId: "gift2", giftName: "스타벅스 기프티콘", giftImageUrl: "", providerName: "", receiverName: "", isAssigned: false, sortOrder: 2 },
+      { giftId: "gift3", giftName: "무선 충전기", giftImageUrl: "", providerName: "", receiverName: "", isAssigned: false, sortOrder: 3 },
+    ],
+    giftParticipants: [
+      { id: "p1", name: "김철수" },
+      { id: "p2", name: "이영희" },
+      { id: "p3", name: "박민수" },
+      { id: "p4", name: "정수진" },
+    ],
+    // 기상미션 샘플
+    missions: [
+      { missionId: "m1", participantName: "김철수", missionText: "아침에 제일 먼저 단체 채팅방에 인사하기", isPublic: true, isCompleted: false, sortOrder: 1 },
+      { missionId: "m2", participantName: "이영희", missionText: "아침 식사 때 옆 사람 물 따라주기", isPublic: true, isCompleted: false, sortOrder: 2 },
+      { missionId: "m3", participantName: "박민수", missionText: "기상 후 단체사진 찍기", isPublic: true, isCompleted: false, sortOrder: 3 },
+      { missionId: "m4", participantName: "정수진", missionText: "아침에 가장 먼저 로비에 도착하기", isPublic: true, isCompleted: false, sortOrder: 4 },
+    ],
   };
 }
 

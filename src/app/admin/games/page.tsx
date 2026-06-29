@@ -86,7 +86,9 @@ export default async function GamesListPage() {
                   {GAME_TYPE_LABELS[g.gameType]} ·{" "}
                   {g.gameType === "gift"
                     ? `${db.gifts.length}선물 / ${db.giftParticipants.length}명`
-                    : `콘텐츠 ${count(g.gameId)}개`}
+                    : g.gameType === "mission"
+                      ? `미션 ${db.missions.length}개`
+                      : `콘텐츠 ${count(g.gameId)}개`}
                 </p>
               </div>
 
@@ -107,6 +109,10 @@ export default async function GamesListPage() {
                 {g.gameType === "gift" ? (
                   <Link href="/admin/gifts" className="rounded-lg bg-violet/20 px-3 py-2 text-sm font-medium text-violet hover:bg-violet/30">
                     선물 관리
+                  </Link>
+                ) : g.gameType === "mission" ? (
+                  <Link href="/admin/missions" className="rounded-lg bg-violet/20 px-3 py-2 text-sm font-medium text-violet hover:bg-violet/30">
+                    미션 관리
                   </Link>
                 ) : (
                   <Link

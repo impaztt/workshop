@@ -36,6 +36,7 @@ export default async function AdminLayout({
           <NavItem href="/admin" label="대시보드" />
           <NavItem href="/admin/games" label="게임 목록 관리" />
           <NavItem href="/admin/gifts" label="선물증정 관리" />
+          <NavItem href="/admin/missions" label="기상미션 관리" />
           <NavItem href="/admin/settings" label="행사 설정" />
         </nav>
         <div className="mt-4 flex flex-col gap-2 border-t border-white/10 pt-4">

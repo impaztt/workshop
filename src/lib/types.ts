@@ -13,8 +13,21 @@ export type GameType =
   | "truth" // 진실게임
   | "mission"; // 기상미션
 
-// 1차 개발 범위에서 실제 플레이 화면이 구현된 유형
-export const PLAYABLE_TYPES: GameType[] = ["balance", "image", "music", "gift"];
+// 본게임(플레이) 화면이 구현된 유형 — 전 게임 구현 완료
+export const PLAYABLE_TYPES: GameType[] = [
+  "balance",
+  "draw",
+  "chain",
+  "taste",
+  "image",
+  "together",
+  "hide",
+  "music",
+  "goldenbell",
+  "truth",
+  "gift",
+  "mission",
+];
 
 export interface Game {
   gameId: string;
@@ -35,13 +48,17 @@ export interface GameContent {
   contentId: string;
   gameId: string;
   // 공통/유형별 필드 — 사용하지 않는 필드는 빈 문자열/기본값
-  question: string; // 밸런스 질문, 골든벨 문제 등
+  question: string; // 밸런스 질문, 골든벨/진실게임 문장 등
   optionO: string; // 밸런스 O 선택지
   optionX: string; // 밸런스 X 선택지
-  keyword: string; // 제시어
-  answer: string; // 정답 (이미지/음악 등)
+  keyword: string; // 제시어(이어그리기), 주제(줄줄이)
+  initialSound: string; // 초성 (줄줄이 말해요)
+  answer: string; // 정답
   artist: string; // 음악 가수명
   hint: string;
+  options: string; // 객관식 보기 (줄바꿈 구분, 도전골든벨)
+  questionType: string; // 골든벨 문제 유형: "주관식" | "객관식" | "ox"
+  count: number; // 참가 인원 수 등 (이어그리기)
   imageUrl: string;
   audioUrl: string;
   timeLimit: number; // 0이면 게임 기본값 사용
@@ -65,6 +82,16 @@ export interface GiftParticipant {
   name: string;
 }
 
+// 기상미션 전용 데이터
+export interface Mission {
+  missionId: string;
+  participantName: string;
+  missionText: string;
+  isPublic: boolean; // 전체 공개 / 개인 공개
+  isCompleted: boolean;
+  sortOrder: number;
+}
+
 export interface DB {
   meta: {
     eventName: string; // 행사명
@@ -75,4 +102,5 @@ export interface DB {
   contents: GameContent[];
   gifts: Gift[];
   giftParticipants: GiftParticipant[];
+  missions: Mission[];
 }

@@ -24,10 +24,42 @@ async function persist(db: DB): Promise<void> {
   }
 }
 
+const CONTENT_DEFAULTS = {
+  question: "",
+  optionO: "",
+  optionX: "",
+  keyword: "",
+  initialSound: "",
+  answer: "",
+  artist: "",
+  hint: "",
+  options: "",
+  questionType: "주관식",
+  count: 0,
+  imageUrl: "",
+  audioUrl: "",
+  timeLimit: 0,
+  isActive: true,
+  sortOrder: 0,
+};
+
+// 구 스키마 db.json을 읽어도 깨지지 않도록 누락 필드를 기본값으로 보정
+function normalize(db: Partial<DB>): DB {
+  const seed = createSeedDB();
+  return {
+    meta: { ...seed.meta, ...(db.meta ?? {}) },
+    games: db.games ?? seed.games,
+    contents: (db.contents ?? []).map((c) => ({ ...CONTENT_DEFAULTS, ...c })),
+    gifts: db.gifts ?? [],
+    giftParticipants: db.giftParticipants ?? [],
+    missions: db.missions ?? [],
+  };
+}
+
 async function ensureFile(): Promise<DB> {
   try {
     const raw = await fs.readFile(dbPath(), "utf-8");
-    return JSON.parse(raw) as DB;
+    return normalize(JSON.parse(raw) as Partial<DB>);
   } catch {
     const seed = createSeedDB();
     await persist(seed);

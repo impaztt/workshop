@@ -20,8 +20,9 @@ export default async function ContentManagePage({
   const { id } = await params;
   const game = await getGame(id);
   if (!game) notFound();
-  // 선물증정은 전용 페이지에서 관리
+  // 선물증정·기상미션은 전용 페이지에서 관리
   if (game.gameType === "gift") redirect("/admin/gifts");
+  if (game.gameType === "mission") redirect("/admin/missions");
 
   const contents = await getContents(id);
 
