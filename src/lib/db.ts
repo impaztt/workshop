@@ -1,14 +1,27 @@
 import { promises as fs } from "fs";
 import path from "path";
+import { Redis } from "@upstash/redis";
 import type { DB } from "./types";
 import { createSeedDB } from "./seed";
 import { dataDir } from "./paths";
 
 const dbPath = () => path.join(dataDir(), "db.json");
+const REDIS_KEY = "workshop:db:v1";
+
+// Upstash/Vercel KV 환경변수가 있으면 클라우드 영구 저장소를 사용한다.
+// (없으면 로컬 파일 저장 — 개발 환경)
+function getRedis(): Redis | null {
+  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+  const token =
+    process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+  if (url && token) return new Redis({ url, token });
+  return null;
+}
+const redis = getRedis();
 
 // 동시 쓰기 직렬화용 단순 뮤텍스 (단일 프로세스 기준)
 let writeChain: Promise<unknown> = Promise.resolve();
-// 메모리 캐시 — 매 요청마다 디스크를 다시 읽지 않도록
+// 메모리 캐시 — 파일 모드에서 매 요청마다 디스크를 다시 읽지 않도록 (Redis 모드에선 미사용)
 let cache: DB | null = null;
 
 // 디스크에 쓰되, 읽기 전용 환경(서버리스 등)에서는 조용히 무시하고 메모리만 갱신
@@ -69,21 +82,32 @@ async function ensureFile(): Promise<DB> {
 }
 
 export async function readDB(): Promise<DB> {
+  if (redis) {
+    const data = await redis.get<Partial<DB>>(REDIS_KEY);
+    if (data) return normalize(data);
+    const seed = createSeedDB();
+    await redis.set(REDIS_KEY, seed);
+    return seed;
+  }
   if (cache) return cache;
   cache = await ensureFile();
   return cache;
 }
 
-// 콜백 안에서 DB를 직접 변형하면 디스크에 저장된다.
+// 콜백 안에서 DB를 직접 변형하면 저장소(Redis 또는 디스크)에 반영된다.
 export async function mutateDB<T>(fn: (db: DB) => T | Promise<T>): Promise<T> {
   const run = async (): Promise<T> => {
     const db = await readDB();
     const result = await fn(db);
-    cache = db;
-    await persist(db);
+    if (redis) {
+      await redis.set(REDIS_KEY, db);
+    } else {
+      cache = db;
+      await persist(db);
+    }
     return result;
   };
-  // 이전 쓰기가 끝난 뒤 실행되도록 체인에 연결
+  // 이전 쓰기가 끝난 뒤 실행되도록 체인에 연결 (인스턴스 내 직렬화)
   const next = writeChain.then(run, run);
   writeChain = next.catch(() => undefined);
   return next;
