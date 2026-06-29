@@ -1,0 +1,189 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0a0a14;
+  --color-navy: #0f1230;
+  --color-navy-2: #161a45;
+  --color-purple: #2a1d52;
+  --color-gold: #f5c451;
+  --color-gold-soft: #ffe7a8;
+  --color-mint: #5eead4;
+  --color-violet: #a78bfa;
+  --color-success: #34d399;
+  --color-danger: #f87171;
+  --color-warn: #fbbf24;
+
+  --font-display: "Pretendard", "Noto Sans KR", system-ui, sans-serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-ink);
+  color: #f5f6ff;
+  font-family: var(--font-display);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* 행사장 대형 화면용 베이스 배경: 딥 네이비 + 퍼플 글로우 */
+.stage-bg {
+  position: relative;
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px 700px at 15% -10%, rgba(124, 92, 255, 0.28), transparent 60%),
+    radial-gradient(1000px 600px at 110% 10%, rgba(94, 234, 212, 0.16), transparent 55%),
+    radial-gradient(900px 900px at 50% 120%, rgba(245, 196, 81, 0.1), transparent 60%),
+    linear-gradient(160deg, #0a0a14 0%, #0f1230 45%, #161033 100%);
+}
+
+.stage-bg::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 3px 3px;
+  opacity: 0.5;
+}
+
+/* 글래스모피즘 카드 */
+.glass {
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.09),
+    rgba(255, 255, 255, 0.03)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 20px 60px -20px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px);
+}
+
+.glass-strong {
+  background: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.14),
+    rgba(255, 255, 255, 0.05)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(18px);
+}
+
+.gold-text {
+  background: linear-gradient(120deg, #ffe7a8, #f5c451 45%, #c89b3c);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.text-glow {
+  text-shadow: 0 0 30px rgba(167, 139, 250, 0.5);
+}
+
+/* 진행자 컨트롤 버튼 공통 */
+.ctrl-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 700;
+  border-radius: 1rem;
+  padding: 0.9rem 1.6rem;
+  font-size: 1.15rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  transition: transform 0.12s ease, background 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  user-select: none;
+}
+.ctrl-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+.ctrl-btn:active {
+  transform: translateY(0);
+}
+.ctrl-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+.ctrl-btn-gold {
+  background: linear-gradient(120deg, #f5c451, #e0a93a);
+  color: #1a1404;
+  border-color: rgba(245, 196, 81, 0.6);
+  box-shadow: 0 10px 30px -8px rgba(245, 196, 81, 0.6);
+}
+.ctrl-btn-gold:hover {
+  background: linear-gradient(120deg, #ffd76b, #f0b94a);
+}
+.ctrl-btn-success {
+  background: linear-gradient(120deg, #34d399, #10b981);
+  color: #03251a;
+  border-color: rgba(52, 211, 153, 0.5);
+}
+.ctrl-btn-danger {
+  background: linear-gradient(120deg, #f87171, #ef4444);
+  color: #2a0606;
+  border-color: rgba(248, 113, 113, 0.5);
+}
+
+/* 정답 성공 화면 플래시 */
+@keyframes flash-success {
+  0% { opacity: 0; }
+  15% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes flash-danger {
+  0% { opacity: 0; transform: translateX(0); }
+  20% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-14px); }
+  40% { transform: translateX(12px); }
+  60% { transform: translateX(-8px); }
+  80% { transform: translateX(6px); }
+}
+.animate-shake {
+  animation: shake 0.45s ease;
+}
+
+/* 관리자 영역 — 깔끔한 다크 톤 */
+.admin-input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0.6rem;
+  padding: 0.6rem 0.8rem;
+  color: #fff;
+  font-size: 0.95rem;
+}
+.admin-input:focus {
+  outline: none;
+  border-color: var(--color-violet);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.25);
+}
+.admin-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #b9bce0;
+  margin-bottom: 0.35rem;
+}
+
+/* 스크롤바 */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+}
