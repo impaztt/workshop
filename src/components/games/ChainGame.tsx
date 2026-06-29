@@ -57,6 +57,9 @@ export function ChainGame({
     if (index + 1 >= contents.length) setEnded(true);
     else setIndex((i) => i + 1);
   };
+  const prevRound = () => {
+    if (index > 0) setIndex((i) => i - 1);
+  };
 
   if (ended) {
     return (
@@ -78,6 +81,7 @@ export function ChainGame({
           <button className="ctrl-btn" onClick={() => cd.reset(seconds)}>⟳ 초기화</button>
           <button className="ctrl-btn ctrl-btn-success" onClick={success}>○ 성공 (다음 사람)</button>
           <button className="ctrl-btn ctrl-btn-danger" onClick={fail}>✕ 탈락</button>
+          <button className="ctrl-btn" onClick={prevRound} disabled={index === 0}>← 이전</button>
           <button className="ctrl-btn" onClick={nextRound}>{index + 1 >= contents.length ? "결과 →" : "다음 라운드 →"}</button>
         </>
       }

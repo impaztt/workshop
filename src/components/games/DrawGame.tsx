@@ -53,6 +53,9 @@ export function DrawGame({
     if (index + 1 >= contents.length) setEnded(true);
     else setIndex((i) => i + 1);
   };
+  const prevRound = () => {
+    if (index > 0) setIndex((i) => i - 1);
+  };
 
   if (ended) {
     return (
@@ -94,6 +97,9 @@ export function DrawGame({
           </button>
           <button className="ctrl-btn ctrl-btn-danger" onClick={() => flash("fail")}>
             ✕ 실패
+          </button>
+          <button className="ctrl-btn" onClick={prevRound} disabled={index === 0}>
+            ← 이전
           </button>
           <button className="ctrl-btn" onClick={nextRound}>
             {index + 1 >= contents.length ? "결과 →" : "다음 제시어 →"}

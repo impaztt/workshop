@@ -34,6 +34,9 @@ export function BalanceGame({
       setIndex((i) => i + 1);
     }
   };
+  const prev = () => {
+    if (index > 0) setIndex((i) => i - 1);
+  };
 
   if (ended) {
     return (
@@ -69,6 +72,9 @@ export function BalanceGame({
           </button>
           <button className="ctrl-btn" onClick={() => cd.reset(seconds)}>
             ⟳ 초기화
+          </button>
+          <button className="ctrl-btn" onClick={prev} disabled={index === 0}>
+            ← 이전
           </button>
           <button className="ctrl-btn ctrl-btn-success" onClick={next}>
             {index + 1 >= contents.length ? "결과 보기 →" : "다음 →"}

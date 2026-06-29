@@ -47,6 +47,9 @@ export function TasteGame({
     if (index + 1 >= contents.length) setEnded(true);
     else setIndex((i) => i + 1);
   };
+  const prev = () => {
+    if (index > 0) setIndex((i) => i - 1);
+  };
 
   if (ended) {
     return (
@@ -67,6 +70,7 @@ export function TasteGame({
           <button className="ctrl-btn ctrl-btn-danger" onClick={fail}>✕ 오답</button>
           <button className="ctrl-btn" style={{ background: "rgba(125,211,252,0.18)" }} onClick={() => win("B팀")}>B팀 정답</button>
           <button className="ctrl-btn" onClick={() => setReveal((r) => !r)}>{reveal ? "정답 가리기" : "👁 정답 보기"}</button>
+          <button className="ctrl-btn" onClick={prev} disabled={index === 0}>← 이전</button>
           <button className="ctrl-btn" onClick={next}>{index + 1 >= contents.length ? "결과 →" : "다음 →"}</button>
         </>
       }

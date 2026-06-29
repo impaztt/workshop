@@ -46,6 +46,9 @@ export function ImageQuiz({
     if (index + 1 >= contents.length) setEnded(true);
     else setIndex((i) => i + 1);
   };
+  const prev = () => {
+    if (index > 0) setIndex((i) => i - 1);
+  };
 
   if (ended) {
     return (
@@ -91,6 +94,9 @@ export function ImageQuiz({
           </button>
           <button className="ctrl-btn ctrl-btn-danger" onClick={() => flash("fail")}>
             ✕ 오답
+          </button>
+          <button className="ctrl-btn" onClick={prev} disabled={index === 0}>
+            ← 이전
           </button>
           <button className="ctrl-btn" onClick={next}>
             {index + 1 >= contents.length ? "결과 →" : "다음 →"}

@@ -54,6 +54,12 @@ export function HideGame({
     cd.pause();
     advance({ label, seconds: null });
   };
+  const prevRound = () => {
+    if (index > 0) {
+      setRecords((r) => r.slice(0, -1));
+      setIndex((i) => i - 1);
+    }
+  };
 
   const fmt = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 
@@ -93,6 +99,7 @@ export function HideGame({
           <button className="ctrl-btn ctrl-btn-gold" onClick={cd.start} disabled={cd.running}>▶ 시작</button>
           <button className="ctrl-btn" onClick={cd.pause} disabled={!cd.running}>⏸ 정지</button>
           <button className="ctrl-btn" onClick={() => cd.reset(seconds)}>⟳ 초기화</button>
+          <button className="ctrl-btn" onClick={prevRound} disabled={index === 0}>← 이전</button>
           <button className="ctrl-btn ctrl-btn-success" onClick={found}>✓ 찾았다! (기록)</button>
           <button className="ctrl-btn ctrl-btn-danger" onClick={failRound}>✕ 못 찾음</button>
         </>

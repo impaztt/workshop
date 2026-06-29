@@ -70,6 +70,20 @@ export function GiftDraw({
     }
   };
 
+  // 이전 선물로 되돌리기 — 마지막 추첨 결과 취소하고 당첨자를 풀에 복구
+  const prev = () => {
+    if (giftIndex === 0 || spinning) return;
+    const last = results[results.length - 1];
+    setResults((r) => r.slice(0, -1));
+    if (last) {
+      const p = participants.find((x) => x.name === last.receiver);
+      if (p) setPool((pool) => [...pool, p]);
+    }
+    setGiftIndex((i) => i - 1);
+    setWinner(null);
+    setDisplay("???");
+  };
+
   if (ended) {
     return (
       <PlayShell title={title} accent="#fb7185" controls={null}>
@@ -98,6 +112,9 @@ export function GiftDraw({
       progress={{ current: giftIndex + 1, total: ordered.length }}
       controls={
         <>
+          <button className="ctrl-btn" onClick={prev} disabled={giftIndex === 0 || spinning}>
+            ← 이전
+          </button>
           <button className="ctrl-btn ctrl-btn-gold" onClick={spin} disabled={spinning}>
             🎰 {winner ? "다시 추첨" : "추첨 시작"}
           </button>

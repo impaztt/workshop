@@ -41,6 +41,9 @@ export function TogetherGame({
     if (index + 1 >= contents.length) setEnded(true);
     else setIndex((i) => i + 1);
   };
+  const prev = () => {
+    if (index > 0) setIndex((i) => i - 1);
+  };
 
   if (ended) {
     return (
@@ -60,6 +63,7 @@ export function TogetherGame({
           <button className="ctrl-btn" onClick={() => setReveal((r) => !r)}>{reveal ? "정답 가리기" : "👁 정답 보기"}</button>
           <button className="ctrl-btn ctrl-btn-success" onClick={() => { flash("success"); setReveal(true); }}>○ 정답</button>
           <button className="ctrl-btn ctrl-btn-danger" onClick={() => flash("fail")}>✕ 오답</button>
+          <button className="ctrl-btn" onClick={prev} disabled={index === 0}>← 이전</button>
           <button className="ctrl-btn" onClick={next}>{index + 1 >= contents.length ? "결과 →" : "다음 →"}</button>
         </>
       }
