@@ -249,6 +249,22 @@ export async function addGiftAction(fd: FormData) {
   revalidatePath("/admin/gifts");
 }
 
+export async function updateGiftAction(fd: FormData) {
+  await requireAuth();
+  const giftId = str(fd, "giftId");
+  const image = await saveUpload(fd.get("image"), "image");
+  await mutateDB((db) => {
+    const g = db.gifts.find((x) => x.giftId === giftId);
+    if (!g) return;
+    g.giftName = str(fd, "giftName") || g.giftName;
+    g.providerName = str(fd, "providerName");
+    if (image) g.giftImageUrl = image;
+    if (bool(fd, "removeImage")) g.giftImageUrl = "";
+  });
+  revalidatePath("/admin/gifts");
+  revalidatePath("/");
+}
+
 export async function deleteGiftAction(fd: FormData) {
   await requireAuth();
   const giftId = str(fd, "giftId");

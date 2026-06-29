@@ -2,6 +2,7 @@ import Link from "next/link";
 import { readDB } from "@/lib/db";
 import {
   addGiftAction,
+  updateGiftAction,
   deleteGiftAction,
   addParticipantsAction,
   deleteParticipantAction,
@@ -41,22 +42,42 @@ export default async function GiftsAdminPage() {
             <input type="file" name="image" accept="image/*" className="admin-input" />
             <button className="ctrl-btn ctrl-btn-gold self-start">+ 선물 추가</button>
           </form>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
             {gifts.map((g) => (
-              <div key={g.giftId} className="flex items-center gap-3 rounded-xl bg-white/5 p-3">
-                {g.giftImageUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={g.giftImageUrl} alt="" className="h-10 w-10 rounded object-cover" />
-                ) : (
-                  <span className="grid h-10 w-10 place-items-center rounded bg-white/5">🎁</span>
-                )}
-                <div className="min-w-0 flex-1">
-                  <p className="truncate font-medium">{g.giftName}</p>
-                  {g.providerName && <p className="truncate text-xs text-white/40">제공: {g.providerName}</p>}
-                </div>
-                <form action={deleteGiftAction}>
+              <div key={g.giftId} className="rounded-xl bg-white/5 p-3">
+                <form action={updateGiftAction} className="flex flex-col gap-3">
                   <input type="hidden" name="giftId" value={g.giftId} />
-                  <button className="text-sm text-danger/70 hover:text-danger">삭제</button>
+                  <div className="flex items-start gap-3">
+                    {/* 썸네일 */}
+                    <div className="h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-white/5">
+                      {g.giftImageUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={g.giftImageUrl} alt="" className="h-full w-full object-cover" />
+                      ) : (
+                        <div className="grid h-full w-full place-items-center text-2xl">🎁</div>
+                      )}
+                    </div>
+                    <div className="flex flex-1 flex-col gap-2">
+                      <input name="giftName" defaultValue={g.giftName} className="admin-input" placeholder="선물명" />
+                      <input name="providerName" defaultValue={g.providerName} className="admin-input" placeholder="제공자 (선택)" />
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <input type="file" name="image" accept="image/*" className="admin-input flex-1" />
+                    {g.giftImageUrl && (
+                      <label className="flex items-center gap-1.5 text-xs text-white/60">
+                        <input type="checkbox" name="removeImage" className="accent-[#f87171]" />
+                        이미지 삭제
+                      </label>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <button type="submit" className="ctrl-btn ctrl-btn-success py-2 text-sm">저장</button>
+                  </div>
+                </form>
+                <form action={deleteGiftAction} className="mt-1">
+                  <input type="hidden" name="giftId" value={g.giftId} />
+                  <button className="text-xs text-danger/70 hover:text-danger">이 선물 삭제</button>
                 </form>
               </div>
             ))}
