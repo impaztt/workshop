@@ -19,7 +19,7 @@ export interface GameCardData {
 
 export function GameGrid({ cards }: { cards: GameCardData[] }) {
   return (
-    <div className="grid flex-1 grid-cols-2 gap-5 md:grid-cols-3 xl:grid-cols-4">
+    <div className="grid flex-1 grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
       {cards.map((card, i) => (
         <motion.div
           key={card.gameId}

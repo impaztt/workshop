@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getActiveGames, getMeta, isGamePlayable, getContentCount } from "@/lib/data";
 import { readDB } from "@/lib/db";
 import { GameGrid } from "@/components/GameGrid";
-import { ProductPanel } from "@/components/ProductPanel";
+import { ProductMenu } from "@/components/ProductMenu";
 import type { GameCardData } from "@/components/GameGrid";
 
 export const dynamic = "force-dynamic";
@@ -41,12 +41,15 @@ export default async function MainPage() {
               <p className="text-xs text-white/50">{meta.eventDate}</p>
             </div>
           </div>
-          <Link
-            href="/admin"
-            className="rounded-full border border-white/15 px-4 py-2 text-sm text-white/60 transition hover:bg-white/10 hover:text-white"
-          >
-            관리자
-          </Link>
+          <div className="flex items-center gap-3">
+            <ProductMenu products={products} />
+            <Link
+              href="/admin"
+              className="rounded-full border border-white/15 px-4 py-2 text-sm text-white/60 transition hover:bg-white/10 hover:text-white"
+            >
+              관리자
+            </Link>
+          </div>
         </header>
 
         {/* 메인 타이틀 */}
@@ -59,13 +62,8 @@ export default async function MainPage() {
           </p>
         </div>
 
-        {/* 카드 그리드 + 오늘의 상품 패널 */}
-        <div className="flex flex-1 flex-col gap-6 lg:flex-row">
-          <div className="flex-1">
-            <GameGrid cards={cards} />
-          </div>
-          <ProductPanel products={products} />
-        </div>
+        {/* 4×3 카드 그리드 */}
+        <GameGrid cards={cards} />
 
         {/* 하단 안내 */}
         <footer className="mt-10 text-center text-sm text-white/35">
