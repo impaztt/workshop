@@ -109,6 +109,14 @@ export function DrawGame({
     >
       <Feedback status={status} successText="정답!" failText="아쉬워요!" />
       <div className="flex w-full max-w-5xl flex-col items-center gap-8">
+        {/* 주제 (힌트) — 카운트다운 위 제목 */}
+        {current.hint && (
+          <div className="text-center">
+            <p className="text-sm font-bold tracking-widest text-white/40">주제</p>
+            <h2 className="text-5xl font-black gold-text md:text-6xl">{current.hint}</h2>
+          </div>
+        )}
+
         {/* 현재 차례 */}
         <div className="flex items-center gap-3">
           {Array.from({ length: people }).map((_, i) => (
