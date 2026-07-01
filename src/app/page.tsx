@@ -22,6 +22,7 @@ export default async function MainPage() {
       thumbnailUrl: g.thumbnailUrl,
       playable: await isGamePlayable(g),
       contentCount: await getContentCount(g.gameId),
+      completed: g.isCompleted ?? false,
     })),
   );
 

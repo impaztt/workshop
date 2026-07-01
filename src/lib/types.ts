@@ -40,6 +40,7 @@ export interface Game {
   sortOrder: number;
   defaultTimeLimit: number; // 초 단위, 0이면 타이머 미사용
   isActive: boolean;
+  isCompleted?: boolean; // 메인 화면에서 '이미 진행함' 표시 (회색 처리, 위치는 유지)
   createdAt: string;
   updatedAt: string;
 }

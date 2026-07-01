@@ -263,6 +263,7 @@ export function createSeedDB(): DB {
     ...g,
     thumbnailUrl: "",
     isActive: true,
+    isCompleted: false,
     createdAt: ts,
     updatedAt: ts,
   }));
