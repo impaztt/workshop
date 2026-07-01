@@ -30,7 +30,7 @@ export function ContentFields({
     case "image":
       return (
         <>
-          <ImageUpload content={content} />
+          <ImageUrlField label="이미지 URL *" name="imageUrl" url={content.imageUrl} />
           <div className="grid grid-cols-2 gap-3">
             <Field label="정답 *">
               <input name="answer" defaultValue={content.answer} className="admin-input" placeholder="예: 스타벅스" />
@@ -50,9 +50,9 @@ export function ContentFields({
             <input name="question" defaultValue={content.question} className="admin-input" placeholder="예: 우리가 처음 갔던 곳은?" />
           </Field>
           <div className="grid grid-cols-3 gap-3">
-            <NumberedImageUpload label="보기 1" field="image" removeField="removeImage" url={content.imageUrl} />
-            <NumberedImageUpload label="보기 2" field="image2" removeField="removeImage2" url={content.imageUrl2} />
-            <NumberedImageUpload label="보기 3" field="image3" removeField="removeImage3" url={content.imageUrl3} />
+            <ImageUrlField label="보기 1 이미지 URL" name="imageUrl" url={content.imageUrl} />
+            <ImageUrlField label="보기 2 이미지 URL" name="imageUrl2" url={content.imageUrl2} />
+            <ImageUrlField label="보기 3 이미지 URL" name="imageUrl3" url={content.imageUrl3} />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <Field label="정답 (보기 번호) *">
@@ -289,32 +289,26 @@ function ImageUpload({ content }: { content: GameContent }) {
   );
 }
 
-// 이미지 정답찾기용 — 보기별 이미지 업로드 (필드명/삭제필드명 지정)
-function NumberedImageUpload({
-  label,
-  field,
-  removeField,
-  url,
-}: {
-  label: string;
-  field: string;
-  removeField: string;
-  url: string;
-}) {
+// 이미지 URL 직접 입력 (이미지퀴즈 · 기억하니?) — 링크를 넣으면 미리보기 표시
+function ImageUrlField({ label, name, url }: { label: string; name: string; url: string }) {
   return (
     <div>
       <label className="admin-label">{label}</label>
+      <input
+        name={name}
+        type="text"
+        defaultValue={url}
+        className="admin-input"
+        placeholder="https://... 이미지 주소 붙여넣기"
+      />
       {url && (
-        <div className="mb-2 flex flex-col items-start gap-1">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={url} alt="" className="h-20 w-full rounded-lg object-contain bg-white/5 p-1" />
-          <label className="flex items-center gap-2 text-sm text-white/60">
-            <input type="checkbox" name={removeField} className="accent-[#f87171]" />
-            삭제
-          </label>
-        </div>
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={url}
+          alt=""
+          className="mt-2 h-24 w-full rounded-lg object-contain bg-white/5 p-1"
+        />
       )}
-      <input type="file" name={field} accept="image/*" className="admin-input" />
     </div>
   );
 }
