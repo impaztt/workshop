@@ -108,11 +108,7 @@ function GameCard({ card }: { card: GameCardData }) {
           >
             {card.mood}
           </span>
-          {card.playable ? (
-            <span className="text-sm font-bold text-gold opacity-0 transition group-hover:opacity-100">
-              선택 →
-            </span>
-          ) : (
+          {!card.playable && (
             <span className="text-xs text-white/35">콘텐츠 0개</span>
           )}
         </div>
@@ -145,6 +141,7 @@ function GameCard({ card }: { card: GameCardData }) {
 }
 
 function CompleteToggle({ gameId, completed }: { gameId: string; completed: boolean }) {
+  const on = !completed; // 켜짐 = 진행 예정(활성), 꺼짐 = 진행 완료
   return (
     <form
       action={toggleGameCompletedAction}
@@ -153,14 +150,18 @@ function CompleteToggle({ gameId, completed }: { gameId: string; completed: bool
       <input type="hidden" name="gameId" value={gameId} />
       <button
         type="submit"
-        title={completed ? "다시 켜기 (진행 예정으로)" : "진행 완료로 표시 (끄기)"}
-        className={`rounded-full px-3 py-1.5 text-xs font-bold shadow-lg backdrop-blur transition ${
-          completed
-            ? "bg-white/20 text-white/80 hover:bg-white/30"
-            : "bg-black/55 text-white/70 hover:bg-black/75 hover:text-white"
+        role="switch"
+        aria-checked={on}
+        title={on ? "진행 완료로 표시 (끄기)" : "다시 켜기 (진행 예정으로)"}
+        className={`relative inline-flex h-7 w-12 items-center rounded-full shadow-lg ring-1 ring-black/20 backdrop-blur transition-colors duration-200 ${
+          on ? "bg-mint" : "bg-white/25"
         }`}
       >
-        {completed ? "켜기" : "끄기"}
+        <span
+          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition-transform duration-200 ${
+            on ? "translate-x-6" : "translate-x-1"
+          }`}
+        />
       </button>
     </form>
   );
