@@ -53,13 +53,18 @@ export function ChainGame({
   const seconds = topic && topic.timeLimit > 0 ? topic.timeLimit : defaultTimeLimit || 3;
 
   const cd = useCountdown(seconds);
-  // 초성이 바뀌면 타이머 초기화
+  // 초성이 바뀌면 타이머 초기화 (다음 초성으로 넘어온 경우 자동 시작)
   const key = useMemo(() => `${topicIdx}-${index}`, [topicIdx, index]);
   const prevKey = useRef(key);
+  const autoStart = useRef(false);
   useEffect(() => {
     if (prevKey.current !== key) {
       prevKey.current = key;
       cd.setTotal(seconds);
+      if (autoStart.current) {
+        autoStart.current = false;
+        cd.start();
+      }
     }
   }, [key, seconds, cd]);
 
@@ -92,7 +97,10 @@ export function ChainGame({
   };
   const next = () => {
     if (index + 1 >= sounds.length) setEnded(true);
-    else setIndex((i) => i + 1);
+    else {
+      autoStart.current = true; // 다음 초성으로 넘어가면 3초 카운트 자동 시작
+      setIndex((i) => i + 1);
+    }
   };
   const prev = () => {
     if (index > 0) setIndex((i) => i - 1);
