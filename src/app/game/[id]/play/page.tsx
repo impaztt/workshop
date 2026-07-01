@@ -14,6 +14,7 @@ import { HideGame } from "@/components/games/HideGame";
 import { GoldenbellGame } from "@/components/games/GoldenbellGame";
 import { TruthGame } from "@/components/games/TruthGame";
 import { MissionGame } from "@/components/games/MissionGame";
+import { ImagePickGame } from "@/components/games/ImagePickGame";
 
 export const dynamic = "force-dynamic";
 
@@ -69,6 +70,8 @@ export default async function PlayPage({
       return <GoldenbellGame {...common} />;
     case "truth":
       return <TruthGame {...common} />;
+    case "imagepick":
+      return <ImagePickGame {...common} />;
     default:
       redirect(`/game/${id}`);
   }

@@ -172,6 +172,8 @@ function content(
     questionType: "주관식",
     count: 0,
     imageUrl: "",
+    imageUrl2: "",
+    imageUrl3: "",
     audioUrl: "",
     timeLimit: 0,
     sortOrder,
@@ -198,10 +200,10 @@ const seedContents: GameContent[] = [
     optionO: "재택 평생",
     optionX: "사무실 평생",
   }),
-  // 이어그리기 (제시어)
-  content("g02", 1, { keyword: "코끼리", answer: "코끼리", count: 4, timeLimit: 5 }),
-  content("g02", 2, { keyword: "회식", answer: "회식", count: 4, timeLimit: 5 }),
-  content("g02", 3, { keyword: "비행기", answer: "비행기", count: 4, timeLimit: 5 }),
+  // 이어그리기 (1 콘텐츠 = 1 주제, 그 안의 제시어들을 순서대로 진행)
+  content("g02", 1, { keyword: "동물", options: "코끼리\n기린\n펭귄\n악어", count: 4, timeLimit: 5 }),
+  content("g02", 2, { keyword: "회사 생활", options: "회식\n야근\n결재\n출근길", count: 4, timeLimit: 5 }),
+  content("g02", 3, { keyword: "탈것", options: "비행기\n잠수함\n헬리콥터\n자전거", count: 4, timeLimit: 5 }),
   // 줄줄이 말해요 (1 콘텐츠 = 1 주제, 초성은 자동 11개 생성). 주제 6개.
   content("g03", 1, { keyword: "음식 이름", hint: "김밥, 감자탕", timeLimit: 3 }),
   content("g03", 2, { keyword: "동물", hint: "사자, 사슴", timeLimit: 3 }),
@@ -318,4 +320,5 @@ export const GAME_TYPE_LABELS: Record<GameType, string> = {
   goldenbell: "도전골든벨",
   truth: "진실게임",
   mission: "기상미션",
+  imagepick: "이미지 정답찾기",
 };

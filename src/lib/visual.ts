@@ -17,4 +17,5 @@ export const GAME_VISUAL: Record<
   truth: { icon: "🎭", gradient: "from-[#2a2150] to-[#5b3a8f]", accent: "#a78bfa" },
   gift: { icon: "🎁", gradient: "from-[#6e1f3a] to-[#c0306a]", accent: "#fb7185" },
   mission: { icon: "🌅", gradient: "from-[#5a3a1a] to-[#c2742e]", accent: "#fbbf24" },
+  imagepick: { icon: "🧠", gradient: "from-[#23406e] to-[#4f8fd0]", accent: "#7dd3fc" },
 };

@@ -180,6 +180,8 @@ export async function createContentAction(fd: FormData) {
       questionType: "주관식",
       count: 0,
       imageUrl: "",
+      imageUrl2: "",
+      imageUrl3: "",
       audioUrl: "",
       timeLimit: 0,
       sortOrder: maxOrder + 1,
@@ -194,6 +196,8 @@ export async function updateContentAction(fd: FormData) {
   const contentId = str(fd, "contentId");
   const gameId = str(fd, "gameId");
   const image = await saveUpload(fd.get("image"), "image");
+  const image2 = await saveUpload(fd.get("image2"), "image");
+  const image3 = await saveUpload(fd.get("image3"), "image");
   const audio = await saveUpload(fd.get("audio"), "audio");
   await mutateDB((db) => {
     const c = db.contents.find((x) => x.contentId === contentId);
@@ -212,8 +216,12 @@ export async function updateContentAction(fd: FormData) {
     c.timeLimit = num(fd, "timeLimit");
     c.isActive = bool(fd, "isActive");
     if (image) c.imageUrl = image;
+    if (image2) c.imageUrl2 = image2;
+    if (image3) c.imageUrl3 = image3;
     if (audio) c.audioUrl = audio;
     if (bool(fd, "removeImage")) c.imageUrl = "";
+    if (bool(fd, "removeImage2")) c.imageUrl2 = "";
+    if (bool(fd, "removeImage3")) c.imageUrl3 = "";
     if (bool(fd, "removeAudio")) c.audioUrl = "";
   });
   revalidatePath(`/admin/games/${gameId}`);

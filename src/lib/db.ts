@@ -50,6 +50,8 @@ const CONTENT_DEFAULTS = {
   questionType: "주관식",
   count: 0,
   imageUrl: "",
+  imageUrl2: "",
+  imageUrl3: "",
   audioUrl: "",
   timeLimit: 0,
   isActive: true,

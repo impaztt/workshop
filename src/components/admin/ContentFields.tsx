@@ -43,6 +43,33 @@ export function ContentFields({
         </>
       );
 
+    case "imagepick":
+      return (
+        <>
+          <Field label="문제 (선택 · 화면 상단 표시)">
+            <input name="question" defaultValue={content.question} className="admin-input" placeholder="예: 우리가 처음 갔던 곳은?" />
+          </Field>
+          <div className="grid grid-cols-3 gap-3">
+            <NumberedImageUpload label="보기 1" field="image" removeField="removeImage" url={content.imageUrl} />
+            <NumberedImageUpload label="보기 2" field="image2" removeField="removeImage2" url={content.imageUrl2} />
+            <NumberedImageUpload label="보기 3" field="image3" removeField="removeImage3" url={content.imageUrl3} />
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="정답 (보기 번호) *">
+              <select name="answer" defaultValue={content.answer || "1"} className="admin-input">
+                <option value="1">1번</option>
+                <option value="2">2번</option>
+                <option value="3">3번</option>
+              </select>
+            </Field>
+            <Field label="힌트 (선택)">
+              <input name="hint" defaultValue={content.hint} className="admin-input" />
+            </Field>
+          </div>
+          <TimeAndActive content={content} />
+        </>
+      );
+
     case "music":
       return (
         <>
@@ -65,14 +92,12 @@ export function ContentFields({
     case "draw":
       return (
         <>
-          <div className="grid grid-cols-2 gap-3">
-            <Field label="제시어 *">
-              <input name="keyword" defaultValue={content.keyword} className="admin-input" placeholder="예: 코끼리" />
-            </Field>
-            <Field label="힌트">
-              <input name="hint" defaultValue={content.hint} className="admin-input" />
-            </Field>
-          </div>
+          <Field label="주제 * (1개 콘텐츠 = 1개 주제, 선택 화면에 표시)">
+            <input name="keyword" defaultValue={content.keyword} className="admin-input" placeholder="예: 동물" />
+          </Field>
+          <Field label="제시어 목록 * (한 줄에 하나씩)">
+            <textarea name="options" defaultValue={content.options} rows={5} className="admin-input" placeholder={"코끼리\n기린\n펭귄\n악어"} />
+          </Field>
           <div className="flex items-end gap-5">
             <div className="w-40">
               <label className="admin-label">참가 인원 (0=기본 4명)</label>
@@ -260,6 +285,36 @@ function ImageUpload({ content }: { content: GameContent }) {
         </div>
       )}
       <input type="file" name="image" accept="image/*" className="admin-input" />
+    </div>
+  );
+}
+
+// 이미지 정답찾기용 — 보기별 이미지 업로드 (필드명/삭제필드명 지정)
+function NumberedImageUpload({
+  label,
+  field,
+  removeField,
+  url,
+}: {
+  label: string;
+  field: string;
+  removeField: string;
+  url: string;
+}) {
+  return (
+    <div>
+      <label className="admin-label">{label}</label>
+      {url && (
+        <div className="mb-2 flex flex-col items-start gap-1">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={url} alt="" className="h-20 w-full rounded-lg object-contain bg-white/5 p-1" />
+          <label className="flex items-center gap-2 text-sm text-white/60">
+            <input type="checkbox" name={removeField} className="accent-[#f87171]" />
+            삭제
+          </label>
+        </div>
+      )}
+      <input type="file" name={field} accept="image/*" className="admin-input" />
     </div>
   );
 }
