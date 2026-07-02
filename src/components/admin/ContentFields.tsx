@@ -54,6 +54,14 @@ export function ContentFields({
             <ImageUrlField label="정답 이미지 URL *" name="imageUrl2" url={content.imageUrl2} />
           </div>
           <div className="grid grid-cols-2 gap-3">
+            <Field label="보기 1번 *">
+              <input name="optionO" defaultValue={content.optionO} className="admin-input" placeholder="예: 스타벅스" />
+            </Field>
+            <Field label="보기 2번 *">
+              <input name="optionX" defaultValue={content.optionX} className="admin-input" placeholder="예: 이디야" />
+            </Field>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
             <Field label="정답 (보기 번호) *">
               <select name="answer" defaultValue={content.answer || "1"} className="admin-input">
                 <option value="1">1번</option>

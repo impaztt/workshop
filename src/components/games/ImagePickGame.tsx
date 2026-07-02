@@ -33,6 +33,7 @@ export function ImagePickGame({
   const quizImage = current.imageUrl; // 퀴즈 이미지
   const answerImage = current.imageUrl2; // 정답 이미지
   const answer = parseInt(current.answer, 10); // 정답 보기 번호 (1~2)
+  const options = [current.optionO, current.optionX]; // 객관식 보기 1·2번
 
   const cd = useCountdown(seconds);
   const prevId = useRef(current.contentId);
@@ -61,6 +62,12 @@ export function ImagePickGame({
     cd.pause();
     if (selected !== null) flash(selected === answer ? "success" : "fail");
   };
+
+  // 퀴즈 시간이 다 되면 정답 이미지 자동 공개
+  useEffect(() => {
+    if (cd.finished && !reveal) doReveal();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cd.finished]);
 
   const next = () => {
     if (index + 1 >= contents.length) setEnded(true);
@@ -141,12 +148,13 @@ export function ImagePickGame({
                 </span>
               )}
             </div>
-            {/* 보기 1번 / 2번 선택 */}
+            {/* 객관식 보기 1번 / 2번 선택 */}
             <div className="grid w-full grid-cols-2 gap-4">
               {[1, 2].map((n) => {
                 const isAnswer = reveal && n === answer;
                 const isWrongPick = reveal && selected === n && n !== answer;
                 const isSelected = selected === n;
+                const label = options[n - 1];
                 return (
                   <motion.button
                     key={`${current.contentId}-opt-${n}`}
@@ -154,7 +162,7 @@ export function ImagePickGame({
                     whileHover={reveal ? {} : { y: -4, scale: 1.03 }}
                     animate={isAnswer ? { scale: [1, 1.05, 1] } : {}}
                     transition={{ duration: 0.4 }}
-                    className="glass relative rounded-2xl px-6 py-5 text-2xl font-black text-white transition"
+                    className="glass relative flex items-center gap-3 rounded-2xl px-6 py-5 text-left transition"
                     style={{
                       boxShadow: isAnswer
                         ? "inset 0 0 0 4px #34d399, 0 0 30px -4px #34d399"
@@ -166,9 +174,17 @@ export function ImagePickGame({
                       opacity: reveal && !isAnswer ? 0.45 : 1,
                     }}
                   >
-                    {n}번
+                    <span
+                      className="grid h-9 w-9 flex-shrink-0 place-items-center rounded-xl text-lg font-black text-ink"
+                      style={{ backgroundColor: isAnswer ? "#34d399" : ACCENT }}
+                    >
+                      {n}
+                    </span>
+                    <span className="text-xl font-bold text-white">
+                      {label || `${n}번`}
+                    </span>
                     {isAnswer && (
-                      <span className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-success px-3 py-1 text-sm font-bold text-ink">
+                      <span className="ml-auto rounded-full bg-success px-3 py-1 text-sm font-bold text-ink">
                         정답
                       </span>
                     )}
