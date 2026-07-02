@@ -312,6 +312,7 @@ function ImageUrlField({ label, name, url }: { label: string; name: string; url:
         <img
           src={url}
           alt=""
+          referrerPolicy="no-referrer"
           className="mt-2 h-24 w-full rounded-lg object-contain bg-white/5 p-1"
         />
       )}

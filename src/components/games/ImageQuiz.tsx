@@ -121,6 +121,7 @@ export function ImageQuiz({
               <img
                 src={current.imageUrl}
                 alt="quiz"
+                referrerPolicy="no-referrer"
                 className="max-h-full max-w-full object-contain"
               />
             ) : (

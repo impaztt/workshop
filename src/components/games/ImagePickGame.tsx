@@ -139,7 +139,7 @@ export function ImagePickGame({
             <div className="glass flex aspect-square w-[min(46vh,480px)] items-center justify-center overflow-hidden rounded-[2rem] bg-white/5 p-6">
               {quizImage ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={quizImage} alt="퀴즈" className="max-h-full max-w-full object-contain" />
+                <img src={quizImage} alt="퀴즈" referrerPolicy="no-referrer" className="max-h-full max-w-full object-contain" />
               ) : (
                 <span className="text-center text-xl text-white/40">
                   퀴즈 이미지 미등록
@@ -216,6 +216,7 @@ export function ImagePickGame({
                     <img
                       src={answerImage}
                       alt="정답"
+                      referrerPolicy="no-referrer"
                       className="max-h-full max-w-full object-contain"
                     />
                   ) : (
