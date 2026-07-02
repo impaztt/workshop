@@ -49,17 +49,15 @@ export function ContentFields({
           <Field label="문제 (선택 · 화면 상단 표시)">
             <input name="question" defaultValue={content.question} className="admin-input" placeholder="예: 우리가 처음 갔던 곳은?" />
           </Field>
-          <div className="grid grid-cols-3 gap-3">
-            <ImageUrlField label="보기 1 이미지 URL" name="imageUrl" url={content.imageUrl} />
-            <ImageUrlField label="보기 2 이미지 URL" name="imageUrl2" url={content.imageUrl2} />
-            <ImageUrlField label="보기 3 이미지 URL" name="imageUrl3" url={content.imageUrl3} />
+          <div className="grid grid-cols-2 gap-3">
+            <ImageUrlField label="퀴즈 이미지 URL *" name="imageUrl" url={content.imageUrl} />
+            <ImageUrlField label="정답 이미지 URL *" name="imageUrl2" url={content.imageUrl2} />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <Field label="정답 (보기 번호) *">
               <select name="answer" defaultValue={content.answer || "1"} className="admin-input">
                 <option value="1">1번</option>
                 <option value="2">2번</option>
-                <option value="3">3번</option>
               </select>
             </Field>
             <Field label="힌트 (선택)">

@@ -12,7 +12,7 @@ export type GameType =
   | "goldenbell" // 도전골든벨
   | "truth" // 진실게임
   | "mission" // 기상미션
-  | "imagepick"; // 이미지 정답찾기 (3개 이미지 중 정답 1개 고르기 · "기억하니?")
+  | "imagepick"; // 기억하니? (퀴즈 이미지 보고 정답 맞추기 → 정답도 이미지로 공개)
 
 // 본게임(플레이) 화면이 구현된 유형 — 전 게임 구현 완료
 export const PLAYABLE_TYPES: GameType[] = [
@@ -63,8 +63,8 @@ export interface GameContent {
   questionType: string; // 골든벨 문제 유형: "주관식" | "객관식" | "ox"
   count: number; // 참가 인원 수 등 (이어그리기)
   imageUrl: string;
-  imageUrl2: string; // 이미지 정답찾기 보기 2
-  imageUrl3: string; // 이미지 정답찾기 보기 3
+  imageUrl2: string; // 기억하니? 정답 이미지
+  imageUrl3: string; // 예비 (미사용)
   audioUrl: string;
   timeLimit: number; // 0이면 게임 기본값 사용
   sortOrder: number;

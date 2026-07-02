@@ -11,7 +11,7 @@ import { GameEnd } from "@/components/common/GameEnd";
 
 const ACCENT = "#7dd3fc";
 
-// 이미지 3개 중 정답 1개를 고르는 게임 ("기억하니?")
+// 퀴즈 이미지를 보고 정답을 맞춘 뒤, 정답도 이미지로 공개하는 게임 ("기억하니?")
 export function ImagePickGame({
   title,
   defaultTimeLimit,
@@ -30,8 +30,9 @@ export function ImagePickGame({
   const current = contents[index];
   // 기본 제한시간 10초 (게임/콘텐츠 설정이 있으면 우선)
   const seconds = current.timeLimit > 0 ? current.timeLimit : defaultTimeLimit || 10;
-  const answer = parseInt(current.answer, 10); // 정답 보기 번호 (1~3)
-  const images = [current.imageUrl, current.imageUrl2, current.imageUrl3];
+  const quizImage = current.imageUrl; // 퀴즈 이미지
+  const answerImage = current.imageUrl2; // 정답 이미지
+  const answer = parseInt(current.answer, 10); // 정답 보기 번호 (1~2)
 
   const cd = useCountdown(seconds);
   const prevId = useRef(current.contentId);
@@ -121,58 +122,97 @@ export function ImagePickGame({
           <h2 className="text-center text-4xl font-black text-white">{current.question}</h2>
         )}
 
-        {/* 이미지 3개 보기 */}
-        <div className="grid w-full grid-cols-3 gap-6">
-          {images.map((url, i) => {
-            const n = i + 1;
-            const isAnswer = reveal && n === answer;
-            const isWrongPick = reveal && selected === n && n !== answer;
-            const isSelected = selected === n;
-            return (
-              <motion.button
-                key={`${current.contentId}-${n}`}
-                onClick={() => pick(n)}
-                whileHover={reveal ? {} : { y: -6, scale: 1.02 }}
-                animate={isAnswer ? { scale: [1, 1.05, 1] } : {}}
+        {/* 퀴즈 이미지 + 정답 이미지 */}
+        <div className="flex w-full items-center justify-center gap-8">
+          {/* 퀴즈 + 보기 선택 */}
+          <div className="flex flex-col items-center gap-3">
+            <span className="rounded-full bg-white/10 px-4 py-1 text-sm font-bold text-white/80">
+              퀴즈
+            </span>
+            <div className="glass flex aspect-square w-[min(46vh,480px)] items-center justify-center overflow-hidden rounded-[2rem] bg-white/5 p-6">
+              {quizImage ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={quizImage} alt="퀴즈" className="max-h-full max-w-full object-contain" />
+              ) : (
+                <span className="text-center text-xl text-white/40">
+                  퀴즈 이미지 미등록
+                  <br />
+                  (관리자페이지에서 등록)
+                </span>
+              )}
+            </div>
+            {/* 보기 1번 / 2번 선택 */}
+            <div className="grid w-full grid-cols-2 gap-4">
+              {[1, 2].map((n) => {
+                const isAnswer = reveal && n === answer;
+                const isWrongPick = reveal && selected === n && n !== answer;
+                const isSelected = selected === n;
+                return (
+                  <motion.button
+                    key={`${current.contentId}-opt-${n}`}
+                    onClick={() => pick(n)}
+                    whileHover={reveal ? {} : { y: -4, scale: 1.03 }}
+                    animate={isAnswer ? { scale: [1, 1.05, 1] } : {}}
+                    transition={{ duration: 0.4 }}
+                    className="glass relative rounded-2xl px-6 py-5 text-2xl font-black text-white transition"
+                    style={{
+                      boxShadow: isAnswer
+                        ? "inset 0 0 0 4px #34d399, 0 0 30px -4px #34d399"
+                        : isWrongPick
+                          ? "inset 0 0 0 4px #f87171"
+                          : isSelected
+                            ? `inset 0 0 0 4px ${ACCENT}`
+                            : "inset 0 0 0 1px rgba(255,255,255,0.08)",
+                      opacity: reveal && !isAnswer ? 0.45 : 1,
+                    }}
+                  >
+                    {n}번
+                    {isAnswer && (
+                      <span className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-success px-3 py-1 text-sm font-bold text-ink">
+                        정답
+                      </span>
+                    )}
+                  </motion.button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* 정답 (공개 시) */}
+          <AnimatePresence>
+            {reveal && (
+              <motion.div
+                initial={{ opacity: 0, x: 24, scale: 0.95 }}
+                animate={{ opacity: 1, x: 0, scale: 1 }}
+                exit={{ opacity: 0, x: 24, scale: 0.95 }}
                 transition={{ duration: 0.4 }}
-                className="glass relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-[1.5rem] bg-white/5 p-4 transition"
-                style={{
-                  boxShadow: isAnswer
-                    ? "inset 0 0 0 4px #34d399, 0 0 40px -4px #34d399"
-                    : isWrongPick
-                      ? "inset 0 0 0 4px #f87171"
-                      : isSelected
-                        ? `inset 0 0 0 4px ${ACCENT}`
-                        : "inset 0 0 0 1px rgba(255,255,255,0.08)",
-                  opacity: reveal && !isAnswer ? 0.45 : 1,
-                }}
+                className="flex flex-col items-center gap-3"
               >
-                {/* 번호 배지 */}
+                <span className="rounded-full bg-success px-4 py-1 text-sm font-bold text-ink">
+                  정답
+                </span>
                 <div
-                  className="absolute left-3 top-3 grid h-10 w-10 place-items-center rounded-xl text-lg font-black text-ink"
-                  style={{ backgroundColor: isAnswer ? "#34d399" : ACCENT }}
+                  className="glass-strong flex aspect-square w-[min(46vh,480px)] items-center justify-center overflow-hidden rounded-[2rem] bg-white/5 p-6"
+                  style={{ boxShadow: "inset 0 0 0 3px #34d39955, 0 0 40px -4px #34d399" }}
                 >
-                  {n}
+                  {answerImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={answerImage}
+                      alt="정답"
+                      className="max-h-full max-w-full object-contain"
+                    />
+                  ) : (
+                    <span className="text-center text-xl text-white/40">
+                      정답 이미지 미등록
+                      <br />
+                      (관리자페이지에서 등록)
+                    </span>
+                  )}
                 </div>
-                {url ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={url} alt={`보기 ${n}`} className="max-h-full max-w-full object-contain" />
-                ) : (
-                  <span className="text-center text-sm text-white/40">
-                    이미지 미등록
-                    <br />
-                    (보기 {n})
-                  </span>
-                )}
-                {/* 정답 배지 */}
-                {isAnswer && (
-                  <div className="absolute bottom-3 right-3 rounded-full bg-success px-3 py-1 text-sm font-bold text-ink">
-                    정답
-                  </div>
-                )}
-              </motion.button>
-            );
-          })}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* 타이머 + 힌트 */}
@@ -184,20 +224,6 @@ export function ImagePickGame({
               <p className="text-xl text-white/85">{current.hint}</p>
             </div>
           )}
-          <AnimatePresence>
-            {reveal && (
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className="glass-strong rounded-2xl px-8 py-5 text-center"
-                style={{ boxShadow: "inset 0 0 0 2px #34d39955" }}
-              >
-                <p className="text-sm font-bold text-gold">정답</p>
-                <p className="text-4xl font-black text-white">{answer || "-"}번</p>
-              </motion.div>
-            )}
-          </AnimatePresence>
         </div>
       </div>
     </PlayShell>
